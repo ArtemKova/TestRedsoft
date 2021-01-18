@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ProductCard">
+    <TextView
+        android:id="@+id/textViewNameProductCard"
+        android:layout_width="0dp"
+        android:layout_height="26dp"
+        android:layout_margin="8dp"
+        android:layout_marginTop="28dp"
+        android:text="Продукт"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.088"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textViewManufacturerCard"
+        android:layout_width="0dp"
+        android:layout_height="24dp"
+        android:layout_margin="8dp"
+        android:layout_marginTop="20dp"
+        android:text="Производитель"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.088"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewNameProductCard" />
+
+    <ImageView
+        android:id="@+id/imageViewProductCard"
+        android:layout_width="124dp"
+        android:layout_height="149dp"
+        android:layout_margin="8dp"
+        android:scaleType="centerCrop"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewManufacturerCard"
+        app:srcCompat="@drawable/net_foto"
+        tools:srcCompat="@drawable/net_foto" />
+
+    <TextView
+        android:id="@+id/textViewLatinCard"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:text="TextView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/imageViewProductCard"
+        app:layout_constraintTop_toBottomOf="@+id/textViewManufacturerCard" />
+
+    <TextView
+        android:id="@+id/textViewCategoryFirstCard"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:text="TextView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/imageViewProductCard"
+        app:layout_constraintTop_toBottomOf="@+id/textViewLatinCard" />
+
+    <TextView
+        android:id="@+id/textViewCategorySecondCard"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:text="TextView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/imageViewProductCard"
+        app:layout_constraintTop_toBottomOf="@+id/textViewCategoryFirstCard" />
+
+    <TextView
+        android:id="@+id/textViewCategoryThirdCard"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:text="TextView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/imageViewProductCard"
+        app:layout_constraintTop_toBottomOf="@+id/textViewCategorySecondCard" />
+
+    <TextView
+        android:id="@+id/textViewCostCard"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="23dp"
+        android:text="TextView"
+        app:layout_constraintStart_toEndOf="@+id/imageViewProductCard"
+        app:layout_constraintTop_toBottomOf="@+id/textViewCategoryThirdCard" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/floatingActionButtonBasketCard"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:clickable="true"
+        android:onClick="onClickAddProduct"
+        android:visibility="visible"
+        app:backgroundTint="#FFFFFF"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.84"
+        app:layout_constraintStart_toEndOf="@+id/imageViewProductCard"
+        app:layout_constraintTop_toBottomOf="@+id/textViewCategoryThirdCard"
+        app:layout_constraintVertical_bias="0.0"
+        app:maxImageSize="50dp"
+        app:srcCompat="@drawable/iconfinderbasket" />
+
+    <TextView
+        android:id="@+id/textViewNumCard"
+        android:layout_width="30dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="8dp"
+        android:background="@android:color/darker_gray"
+        android:gravity="center"
+        android:textSize="18sp"
+        android:visibility="invisible"
+        app:layout_constraintStart_toStartOf="@+id/floatingActionButtonBasketCard"
+        app:layout_constraintTop_toBottomOf="@+id/textViewCategoryThirdCard" />
+
+    <TextView
+        android:id="@+id/buttonPlusCard"
+        android:layout_width="30dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="8dp"
+        android:background="@android:color/darker_gray"
+        android:onClick="onClickPlusButton"
+        android:text="+"
+        android:gravity="center"
+        android:textSize="18sp"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toStartOf="@+id/textViewNumCard"
+        app:layout_constraintTop_toBottomOf="@+id/textViewCategoryThirdCard" />
+
+    <TextView
+        android:id="@+id/buttonMinCard"
+        android:layout_width="30dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="8dp"
+        android:background="@android:color/darker_gray"
+        android:onClick="onClickMinButton"
+        android:text="-"
+        android:gravity="center"
+        android:textSize="18sp"
+        android:visibility="invisible"
+        app:layout_constraintStart_toEndOf="@+id/textViewNumCard"
+        app:layout_constraintTop_toBottomOf="@+id/textViewCategoryThirdCard" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
