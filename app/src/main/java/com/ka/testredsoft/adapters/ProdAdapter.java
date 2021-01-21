@@ -1,35 +1,36 @@
 package com.ka.testredsoft.adapters;
 
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.ka.testredsoft.R;
 import com.ka.testredsoft.pojo.Datum;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-public class ProdAdapter extends RecyclerView.Adapter<ProdAdapter.ProdViewHolder> {
-    private List<Datum> products;
+public class ProdAdapter extends RecyclerView.Adapter<ProdAdapter.ProdViewHolder>implements Filterable {
+    public List<Datum> products;
+    public List<Datum> productsFull;
     public OnProductClickListener onProductClickListener;
-    public Context context;
-    final int[] a = {0};
+    int a = 0;
 
     public List<Datum> getProducts() {
         return products;
@@ -37,9 +38,9 @@ public class ProdAdapter extends RecyclerView.Adapter<ProdAdapter.ProdViewHolder
 
     public void setProducts(List<Datum> products) {
         this.products = products;
+        this.productsFull = new ArrayList<>(products);
         notifyDataSetChanged();
     }
-
 
     public interface OnProductClickListener {
         void onProductClick(int position, int id, int num);
@@ -58,7 +59,7 @@ public class ProdAdapter extends RecyclerView.Adapter<ProdAdapter.ProdViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull final ProdViewHolder holder, final int position) {
-        final Datum product = products.get(position);
+        Datum product = products.get(position);
         switch (product.getCategories().size()) {
             case 0:
                 holder.textViewCategiryFirst.setText("Нет категорий");
@@ -68,29 +69,20 @@ public class ProdAdapter extends RecyclerView.Adapter<ProdAdapter.ProdViewHolder
                 break;
             case 2:
                 holder.textViewCategiryFirst.setText(product.getCategories().get(0).getTitle());
-                holder.textViewCategirySecond.setText(product.getCategories().get(1).getTitle());
                 break;
             case 3:
                 holder.textViewCategiryFirst.setText(product.getCategories().get(0).getTitle());
-                holder.textViewCategirySecond.setText(product.getCategories().get(1).getTitle());
-                holder.textViewCategiryThird.setText(product.getCategories().get(2).getTitle());
                 break;
         }
         holder.textViewNameProduct.setText(product.getTitle());
-        holder.textViewNameProduct.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int id = product.getId();
-            }
-        });
         holder.textViewManufacturer.setText(product.getProducer());
         holder.textViewLatin.setText(product.getShortDescription());
         holder.textViewCost.setText(String.format("%s Р", product.getPrice()));
         holder.buttonBasket.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                a[0] = a[0] + 1;
-                holder.textViewNum.setText("" + a[0]);
+                a = a + 1;
+                holder.textViewNum.setText("" + a);
                 holder.buttonBasket.setVisibility(View.INVISIBLE);
                 holder.buttonPlus.setVisibility(View.VISIBLE);
                 holder.buttonMin.setVisibility(View.VISIBLE);
@@ -100,16 +92,16 @@ public class ProdAdapter extends RecyclerView.Adapter<ProdAdapter.ProdViewHolder
         holder.buttonPlus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                a[0] = a[0] + 1;
-                holder.textViewNum.setText("" + a[0]);
+                a = a + 1;
+                holder.textViewNum.setText("" + a);
             }
         });
         holder.buttonMin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                a[0] = a[0] - 1;
-                holder.textViewNum.setText("" + a[0]);
-                if (a[0] == 0) {
+                a = a - 1;
+                holder.textViewNum.setText("" + a);
+                if (a == 0) {
                     holder.buttonBasket.setVisibility(View.VISIBLE);
                     holder.buttonPlus.setVisibility(View.INVISIBLE);
                     holder.buttonMin.setVisibility(View.INVISIBLE);
@@ -135,12 +127,51 @@ public class ProdAdapter extends RecyclerView.Adapter<ProdAdapter.ProdViewHolder
         return products.size();
     }
 
+    @Override //Фильтрация списка
+    public Filter getFilter() {
+        return productFilter;
+    }
+
+    private Filter productFilter = new Filter() {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            List<Datum> filteredList = new ArrayList<>();
+
+            if (constraint.toString().isEmpty()) {
+                filteredList.addAll(productsFull);
+            } else {
+                String filterPattern = constraint.toString().toLowerCase().trim();
+                for (Datum item : productsFull) {
+                    if (item.getTitle().toLowerCase().contains(filterPattern)) {
+                        filteredList.add(item);
+                    }
+                }
+            }
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            FilterResults results = new FilterResults();
+            results.values = filteredList;
+            return results;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            products.clear();
+            products.addAll((Collection<? extends Datum>) results.values);
+            Log.d("prods", "" + products.size());
+            notifyDataSetChanged();
+        }
+    };
+
     class ProdViewHolder extends RecyclerView.ViewHolder {
         private TextView textViewNameProduct;
         private TextView textViewManufacturer;
         private TextView textViewLatin;
         private TextView textViewCategiryFirst;
-        private TextView textViewCategirySecond;
+        private TextView textViewCategirySecond;//Можно вывести, но в задании указано их не выводить
         private TextView textViewCategiryThird;
         private TextView textViewCost;
         private ImageView imageViewProduct;
@@ -168,7 +199,7 @@ public class ProdAdapter extends RecyclerView.Adapter<ProdAdapter.ProdViewHolder
                 @Override
                 public void onClick(View v) {
                     if (onProductClickListener != null) {
-                        onProductClickListener.onProductClick(getAdapterPosition(), products.get(getAdapterPosition()).getId(), a[0]);
+                        onProductClickListener.onProductClick(getAdapterPosition(), products.get(getAdapterPosition()).getId(), a);
                     }
                 }
             });
@@ -181,7 +212,6 @@ public class ProdAdapter extends RecyclerView.Adapter<ProdAdapter.ProdViewHolder
         protected Bitmap doInBackground(String... strings) {
             URL url = null;
             HttpURLConnection urlConnection = null;
-
             try {
                 url = new URL(strings[0]);
                 urlConnection = (HttpURLConnection) url.openConnection();

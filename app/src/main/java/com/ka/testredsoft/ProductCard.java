@@ -1,5 +1,6 @@
 package com.ka.testredsoft;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 
@@ -32,7 +33,7 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
-public class ProductCard extends AppCompatActivity implements SearchView.OnQueryTextListener {
+public class ProductCard extends AppCompatActivity  {
     private int a;
     private int id;
     private TextView textViewNameProductCard;
@@ -57,6 +58,9 @@ public class ProductCard extends AppCompatActivity implements SearchView.OnQuery
         setContentView(R.layout.activity_product_card);
         a = getIntent().getIntExtra("numProd", 0);
         id = getIntent().getIntExtra("id", 122);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+
 
 
         textViewNameProductCard = findViewById(R.id.textViewNameProductCard);
@@ -81,9 +85,10 @@ public class ProductCard extends AppCompatActivity implements SearchView.OnQuery
                 .subscribe(new Consumer<ExampleCard>() {
                     @Override
                     public void accept(ExampleCard exampleCard) throws Exception {
-                        Toast.makeText(ProductCard.this, "" + exampleCard.getData().getCategories().size(), Toast.LENGTH_LONG).show();
 
-                        textViewNameProductCard.setText(exampleCard.getData().getTitle());
+                        String title = exampleCard.getData().getTitle();
+                        textViewNameProductCard.setText(title);
+                        setTitle(title);
                         textViewManufacturerCard.setText(exampleCard.getData().getProducer());
                         textViewLatinCard.setText(exampleCard.getData().getShortDescription());
                         textViewCostCard.setText(String.format("%s Р", exampleCard.getData().getPrice()));
@@ -200,23 +205,5 @@ public class ProductCard extends AppCompatActivity implements SearchView.OnQuery
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_search, menu);
-        final MenuItem searchItem = menu.findItem(R.id.app_bar_search);
-        final SearchView searchView = (SearchView) searchItem.getActionView();
-        searchView.setOnQueryTextListener(this);
 
-        return true;
-    }
-
-    @Override
-    public boolean onQueryTextSubmit(String query) {
-        return false;
-    }
-
-    @Override
-    public boolean onQueryTextChange(String newText) {
-        return false;
-    }
 }
