@@ -16,6 +16,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.ka.testredsoft.R;
 import com.ka.testredsoft.pojo.Datum;
+import com.squareup.picasso.Picasso;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -60,20 +62,20 @@ public class ProdAdapter extends RecyclerView.Adapter<ProdAdapter.ProdViewHolder
     @Override
     public void onBindViewHolder(@NonNull final ProdViewHolder holder, final int position) {
         Datum product = products.get(position);
-        switch (product.getCategories().size()) {
-            case 0:
-                holder.textViewCategiryFirst.setText("Нет категорий");
-                break;
-            case 1:
-                holder.textViewCategiryFirst.setText(product.getCategories().get(0).getTitle());
-                break;
-            case 2:
-                holder.textViewCategiryFirst.setText(product.getCategories().get(0).getTitle());
-                break;
-            case 3:
-                holder.textViewCategiryFirst.setText(product.getCategories().get(0).getTitle());
-                break;
-        }
+//        switch (product.getCategories().size()) {
+//            case 0:
+//                holder.textViewCategiryFirst.setText("Нет категорий");
+//                break;
+//            case 1:
+//                holder.textViewCategiryFirst.setText(product.getCategories().get(0).getTitle());
+//                break;
+//            case 2:
+//                holder.textViewCategiryFirst.setText(product.getCategories().get(0).getTitle());
+//                break;
+//            case 3:
+//                holder.textViewCategiryFirst.setText(product.getCategories().get(0).getTitle());
+//                break;
+//        }
         holder.textViewNameProduct.setText(product.getTitle());
         holder.textViewManufacturer.setText(product.getProducer());
         holder.textViewLatin.setText(product.getShortDescription());
@@ -109,17 +111,18 @@ public class ProdAdapter extends RecyclerView.Adapter<ProdAdapter.ProdViewHolder
                 }
             }
         });
-        DownloadImage task = new DownloadImage();
-        String url = product.getImageUrl();
-        Bitmap bitmap = null;
-        try {
-            bitmap = task.execute(url).get();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        holder.imageViewProduct.setImageBitmap(bitmap);
+//        DownloadImage task = new DownloadImage();
+//        String url = product.getImageUrl();
+//        Bitmap bitmap = null;
+//        try {
+//            bitmap = task.execute(url).get();
+//        } catch (ExecutionException e) {
+//            e.printStackTrace();
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
+        Picasso.get().load(product.getImageUrl()).into(holder.imageViewProduct);
+//        holder.imageViewProduct.setImageBitmap(bitmap);
     }
 
     @Override

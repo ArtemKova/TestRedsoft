@@ -19,6 +19,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.ka.testredsoft.api.ApiFactory;
 import com.ka.testredsoft.api.ApiProdCard;
 import com.ka.testredsoft.pojo.ExampleCard;
+import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -70,6 +71,7 @@ public class ProductCard extends AppCompatActivity  {
         textViewCategirySecondCard = findViewById(R.id.textViewCategorySecondCard);
         textViewCategiryThirdCard = findViewById(R.id.textViewCategoryThirdCard);
         textViewCostCard = findViewById(R.id.textViewCostCard);
+
         imageViewProductCard = findViewById(R.id.imageViewProductCard);
         buttonBasketCard = findViewById(R.id.floatingActionButtonBasketCard);
         buttonPlusCard = findViewById(R.id.buttonPlusCard);
@@ -111,22 +113,7 @@ public class ProductCard extends AppCompatActivity  {
                                 break;
 
                         }
-                        DownloadImage task = new DownloadImage();
-                        String url = exampleCard.getData().getImageUrl();
-
-                        Bitmap bitmap = null;
-                        try {
-                            bitmap = task.execute(url).get();
-                        } catch (ExecutionException e) {
-                            e.printStackTrace();
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-//        imageView.setImageBitmap(bitmap);
-//        if (bitmap == null){holder.imageViewProduct.setImageResource(R.drawable.net_foto);
-//        }else{
-                        imageViewProductCard.setImageBitmap(bitmap);
-
+                        Picasso.get().load(exampleCard.getData().getImageUrl()).into(imageViewProductCard);
 
                     }
                 }, new Consumer<Throwable>() {
@@ -179,31 +166,7 @@ public class ProductCard extends AppCompatActivity  {
         super.onDestroy();
     }
 
-    private static class DownloadImage extends AsyncTask<String, Void, Bitmap> {
 
-        @Override
-        protected Bitmap doInBackground(String... strings) {
-            URL url = null;
-            HttpURLConnection urlConnection = null;
-
-            try {
-                url = new URL(strings[0]);
-                urlConnection = (HttpURLConnection) url.openConnection();
-                InputStream inputStream = urlConnection.getInputStream();
-                Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-                return bitmap;
-            } catch (MalformedURLException e) {
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            } finally {
-                if (urlConnection != null) {
-                    urlConnection.disconnect();
-                }
-            }
-            return null;
-        }
-    }
 
 
 }

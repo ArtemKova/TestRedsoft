@@ -1,13 +1,17 @@
 package com.ka.testredsoft.pojo;
 
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
+@Entity(tableName = "datum")
 public class Datum {
-
-
+    @PrimaryKey(autoGenerate = true)
+    private int idd;
     @SerializedName("id")
     @Expose
     private int id;
@@ -29,9 +33,17 @@ public class Datum {
     @SerializedName("producer")
     @Expose
     private String producer;
-    @SerializedName("categories")
-    @Expose
-    private List<Category> categories = null;
+//    @SerializedName("categories")
+//    @Expose
+//    private List<Category> categories = null;
+
+    public int getIdd() {
+        return idd;
+    }
+
+    public void setIdd(int idd) {
+        this.idd = idd;
+    }
 
     public int getId() {
         return id;
@@ -89,12 +101,12 @@ public class Datum {
         this.producer = producer;
     }
 
-    public List<Category> getCategories() {
-        return categories;
-    }
-
-    public void setCategories(List<Category> categories) {
-        this.categories = categories;
-    }
+//    public List<Category> getCategories() {
+//        return categories;
+//    }
+//
+//    public void setCategories(List<Category> categories) {
+//        this.categories = categories;
+//    }
 
 }

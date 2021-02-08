@@ -15,6 +15,8 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -44,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
     public List<Datum> prods = new ArrayList<>();
     private int wTime = 250;
     private CountDownTimer countDownTimer;
+    private ProductViewModel viewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,25 +58,26 @@ public class MainActivity extends AppCompatActivity {
         recyclerViewProducts.setLayoutManager(new LinearLayoutManager(this));
         recyclerViewProducts.setAdapter(adapter);
         recyclerViewProducts.setScrollX(4);
-        ApiFactory apiFactory = ApiFactory.getInstance();
-        ApiService apiService = apiFactory.getApiService();
-        CompositeDisposable compositeDisposable = new CompositeDisposable();
-        disposable = apiService.getData()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<Example>() {
-                    @Override
-                    public void accept(Example example) throws Exception {
-                        prods.addAll(example.getData());
-                        adapter.setProducts(prods);
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
-                        Toast.makeText(MainActivity.this, "Ошибка получения данных", Toast.LENGTH_SHORT).show();
-                    }
-                });
-        compositeDisposable.add(disposable);
+        viewModel =  new ViewModelProvider(this, ViewModelProvider.AndroidViewModelFactory.getInstance(this.getApplication()))
+                .get(ProductViewModel.class);
+        viewModel = new ViewModelProvider(this).get(ProductViewModel.class);
+        viewModel.getDatum().observe(this, new Observer<List<Datum>>() {
+            @Override
+            public void onChanged(List<Datum> data) {
+                adapter.setProducts(data);
+            }
+        });
+        viewModel.getErrors().observe(this, new Observer<Throwable>() {
+            @Override
+            public void onChanged(Throwable throwable) {
+                if (throwable!=null){
+                    Toast.makeText(MainActivity.this, "Error", Toast.LENGTH_SHORT).show();
+                    viewModel.clearErrors();
+                }
+
+            }
+        });
+        viewModel.loadData();
         adapter.setProducts(prods);
         adapter.setOnProductClickListener(new ProdAdapter.OnProductClickListener() {
             @Override
@@ -84,15 +88,10 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
     }
 
-    @Override
-    protected void onDestroy() {
-        if (compositeDisposable != null) {
-            compositeDisposable.dispose();
-        }
-        super.onDestroy();
-    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

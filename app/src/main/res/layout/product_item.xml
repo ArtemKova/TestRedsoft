@@ -39,8 +39,8 @@
 
         <ImageView
             android:id="@+id/imageViewProduct"
-            android:layout_width="149dp"
-            android:layout_height="237dp"
+            android:layout_width="137dp"
+            android:layout_height="210dp"
             android:layout_margin="8dp"
             android:scaleType="centerCrop"
             app:layout_constraintBottom_toBottomOf="parent"
